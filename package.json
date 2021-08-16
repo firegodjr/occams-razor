@@ -1,0 +1,34 @@
+{
+    "name": "occams-razor",
+    "displayName": "Occam's Razor",
+    "description": "Not all Razor templates are tag-based markdown. Provides simple syntax highlighting for any kind of Razor template.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.59.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "razor",
+            "aliases": ["Razor", "razor"],
+            "extensions": [".cshtml",".razor"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "razor",
+            "scopeName": "source.razor",
+            "path": "./syntaxes/razor.tmLanguage.json"
+        }],
+        "colors": [{
+            "id": "occamsrazor.scope",
+            "description": "Color for razor-owned brackets",
+            "defaults": {
+                "dark": "symbolIcon.keywordForeground",
+                "light": "symbolIcon.keywordForeground",
+                "highContrast": "symbolIcon.keywordForeground"
+            }
+        }]
+    }
+}

@@ -1,0 +1,185 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Razor",
+	"patterns": [
+		{"include": "#keyword"},
+		{"include": "#body"},
+		{"include": "#properties"},
+		{"include": "#escapes"}
+	],
+	"repository": {
+		"keyword": {
+			"patterns": [
+				{
+					"begin": "((@(if|foreach|switch))\\s*\\(.*\\)\\s*({))",
+					"end": "(})",
+					"captures": {
+						"1": { "name": "keyword.control.razor" }
+					},
+					"patterns": [
+						{ "include": "#codeblock" }
+					]
+				},
+				{
+					"begin": "((@(if|foreach|switch))\\s*\\(.*\\))",
+					"end": "(})",
+					"captures": {
+						"1": { "name": "keyword.control.razor" }
+					},
+					"patterns": [
+						{"include": "#codeblock_begin"}
+					]
+				}
+			]
+		},
+		"codeblock_else": {
+			"patterns": [
+				{
+					"begin": "(else.*{)",
+					"end": "(})",
+					"patterns": [
+						{"include": "#codeblock_else"},
+						{"include": "#codeblock_content"}
+					],
+					"beginCaptures": {
+						"1": { "name": "keyword.control.razor" }
+					},
+					"endCaptures": {
+						"1": { "name": "keyword.control.razor" }
+					}
+				},
+				{
+					"begin": "(else.*$)",
+					"end": "(})",
+					"patterns": [
+						{"include": "#codeblock_begin"}
+					],
+					"beginCaptures": {
+						"1": { "name": "keyword.control.razor" }
+					},
+					"endCaptures": {
+						"1": { "name": "keyword.control.razor" }
+					}
+				}
+			]
+		},
+		"codeblock_begin": {
+			"begin": "({)",
+			"end": "(?=(}))",
+			"beginCaptures": {
+				"1": { "name": "keyword.control.razor" }
+			},
+			"patterns": [
+				{"include": "#codeblock"}
+			]
+		},
+		"codeblock_content": {
+			"begin": "({)",
+			"end": "(})",
+			"patterns": [
+				{"include": "#codeblock"}
+			]
+		},
+		"codeblock_cs_begin": {
+			"begin": "({)",
+			"end": "(?=(}))",
+			"beginCaptures": {
+				"1": { "name": "keyword.control.razor" }
+			},
+			"patterns": [
+				{"include": "#body"},
+				{"include": "#escapes"},
+				{"include": "source.cs"}
+			]
+		},
+		"escapes": {
+			"patterns": [
+				{
+					"name": "content.block.escape.razor",
+					"begin": "(<text>)",
+					"end": "(<\/text>)",
+					"patterns": [
+						{ "include": "#escapes" },
+						{ "include": "#keyword" },
+						{ "include": "#body" }
+					],
+					"beginCaptures": {
+						"1": { "name": "content.keyword.escape.razor" }
+					},
+					"endCaptures": {
+						"1": { "name": "content.keyword.escape.razor" }
+					}
+				},
+				{
+					"name": "content.inline.escape.razor",
+					"begin": "(@:)",
+					"end": "$",
+					"patterns": [
+						{ "include": "#escapes" },
+						{ "include": "#keyword" },
+						{ "include": "#body" }
+					],
+					"beginCaptures": {
+						"1": { "name": "content.keyword.escape.razor" }
+					}
+				}
+			]
+		},
+		"body": {
+			"patterns": [
+				{
+					"name": "constant.character.escape.razor",
+					"match": "@@"
+				},
+				{
+					"name": "variable.implicit.property.razor",
+					"match": "@([A-Za-z0-9._]+(\\(.*\\))*)+"
+				},
+				{
+					"name": "variable.implicit.property.razor",
+					"match": "@await ([A-Za-z0-9._]+(\\(.*\\))*)+"
+				},
+				{
+					"name": "variable.explicit.property.razor",
+					"begin": "@\\(",
+					"end": "\\)",
+					"patterns": [
+						{ "include": "#property_content" }
+					]
+				},
+				{
+					"begin": "(@{)",
+					"end": "(})",
+					"captures": {
+						"1": { "name": "keyword.control.razor" }
+					},
+					"patterns": [
+						{ "include": "#codeblock" }
+					]
+				}
+			]
+		},
+		"codeblock": {
+			"patterns": [
+				{"include": "#keyword"},
+				{"include": "#codeblock_content"},
+				{"include": "#codeblock_else"},
+				{"include": "#body"},
+				{"include": "#escapes"},
+				{"include": "source.cs"}
+			]
+		},
+		"property_content": {
+			"begin": "\\(",
+			"end": "\\)",
+			"patterns": [
+				{ "include": "#property_content" }
+			]
+		},
+		"properties": {
+			"patterns": [
+			]
+		}
+	},
+	"scopeName": "source.razor"
+}
